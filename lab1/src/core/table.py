@@ -34,3 +34,15 @@ class Table:
         for row in self.rows:
             if all(row[k] == v for k, v in condition.items()):
                 row.update(new_values)
+
+    def rename(self, new_name: str):
+        self.name = new_name
+
+    def union(self, other: "Table"):
+        if self.schema != other.schema:
+            raise Exception("Schemas do not match")
+
+        new_name = f"{self.name}_union_{other.name}"
+        new_table = Table(new_name, self.schema)
+        new_table.rows = self.rows + other.rows
+        return new_table

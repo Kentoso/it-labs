@@ -135,3 +135,84 @@ def test_update_row(sample_table: Table):
 
     sample_table.update({"id": 1}, {"price": Money.create(150, "USD")})
     assert sample_table.rows[0]["price"] == Money.create(150, "USD")
+
+
+def test_union_success(sample_table: Table):
+    row1 = {
+        "id": 1,
+        "name": "Widget",
+        "price": Money.create(100, "USD"),
+        "interval": MoneyInterval.create(100, 200, "USD"),
+    }
+    row2 = {
+        "id": 2,
+        "name": "Gadget",
+        "price": Money.create(200, "USD"),
+        "interval": MoneyInterval.create(150, 250, "USD"),
+    }
+    row3 = {
+        "id": 3,
+        "name": "Thing",
+        "price": Money.create(300, "USD"),
+        "interval": MoneyInterval.create(250, 350, "USD"),
+    }
+    row4 = {
+        "id": 4,
+        "name": "Doohickey",
+        "price": Money.create(400, "USD"),
+        "interval": MoneyInterval.create(350, 450, "USD"),
+    }
+
+    sample_table.insert(row1)
+    sample_table.insert(row2)
+
+    other_table = Table("other_products", sample_table.schema)
+    other_table.insert(row3)
+    other_table.insert(row4)
+
+    result = sample_table.union(other_table)
+    assert len(result.rows) == 4
+    assert result.rows[0] == row1
+    assert result.rows[1] == row2
+    assert result.rows[2] == row3
+    assert result.rows[3] == row4
+
+
+def test_union_failure(sample_table: Table):
+    row1 = {
+        "id": 1,
+        "name": "Widget",
+        "price": Money.create(100, "USD"),
+        "interval": MoneyInterval.create(100, 200, "USD"),
+    }
+    row2 = {
+        "id": 2,
+        "name": "Gadget",
+        "price": Money.create(200, "USD"),
+        "interval": MoneyInterval.create(150, 250, "USD"),
+    }
+    row3 = {
+        "id": 3,
+        "name": "Thing",
+    }
+    row4 = {
+        "id": 4,
+        "name": "Doohickey",
+    }
+
+    sample_table.insert(row1)
+    sample_table.insert(row2)
+
+    other_table = Table(
+        "other_products", Schema({"id": DataType.INTEGER, "name": DataType.STRING})
+    )
+    other_table.insert(row3)
+    other_table.insert(row4)
+
+    with pytest.raises(Exception, match="Schemas do not match"):
+        sample_table.union(other_table)
+
+
+def test_rename(sample_table: Table):
+    sample_table.rename("renamed_products")
+    assert sample_table.name == "renamed_products"

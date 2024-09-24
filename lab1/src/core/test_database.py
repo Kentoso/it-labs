@@ -1,5 +1,6 @@
 import pytest
 from schema import Schema
+from table import Table
 from database import Database
 
 
@@ -39,6 +40,14 @@ def test_get_table():
     db.create_table("users", schema)
     table = db.get_table("users")
     assert table.name == "users"
+
+
+def test_add_table():
+    db = Database("test_db")
+    schema = Schema({"name": "string", "age": "integer"})
+    table = Table("users", schema)
+    db.add_table(table)
+    assert db.tables[0] == table
 
 
 def test_invalid_data():
