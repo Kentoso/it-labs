@@ -1,34 +1,21 @@
 from functools import total_ordering
+from datatypes.datatype import DataType
 
 
-class Money:
-    def __init__(self):
-        self.value = 0
-        self.currency = ""
+class Money(DataType):
+    def __init__(self, money: str = "0 USD"):
+        # value is stored in cents
+        self.value, self.currency = Money.parse(money)
+        if not self.validate():
+            print("VALUE:", type(self.value), self.value)
 
-    @staticmethod
-    def create(value: int, currency: str) -> "Money":
-        if value < 0:
-            raise Exception("Money value cannot be negative")
-        elif value > 10_000_000_000_000_00:
-            raise Exception("Money value is too large")
-
-        money = Money()
-        money.value = value
-        money.currency = currency
-        return money
-
-    def __add__(self, other):
-        if self.currency != other.currency:
-            raise Exception("Cannot add money with different currencies")
-
-        return Money(self.value + other.value, self.currency)
-
-    def __sub__(self, other):
-        if self.currency != other.currency:
-            raise Exception("Cannot subtract money with different currencies")
-
-        return Money(self.value - other.value, self.currency)
+    def validate(self) -> bool:
+        return (
+            isinstance(self.value, int)
+            and self.value >= 0
+            and self.value <= 10_000_000_000_000_00
+            and isinstance(self.currency, str)
+        )
 
     def __eq__(self, other):
         return (
@@ -45,7 +32,14 @@ class Money:
         return self.value < other.value
 
     def __str__(self) -> str:
-        return f"{self.value} {self.currency}"
+        cents = self.value % 100
+        if cents > 0:
+            return f"{self.value // 100}.{cents} {self.currency}"
+        else:
+            return f"{self.value // 100} {self.currency}"
+
+    def __repr__(self) -> str:
+        return f"Money({self})"
 
     @staticmethod
     def parse(s: str):
@@ -63,32 +57,34 @@ class Money:
         else:
             value = int(value)
 
-        return Money.create(value, currency)
+        return value, currency
 
 
-class MoneyInterval:
-    def __init__(self):
-        self.start = Money()
-        self.end = Money()
-        self.currency = ""
+class MoneyInterval(DataType):
+    def __init__(self, interval: str):
+        self.start, self.end = MoneyInterval.parse(interval)
 
-    @staticmethod
-    def create(start: int | Money, end: int | Money, currency: str) -> "MoneyInterval":
-        start_money = (
-            start if isinstance(start, Money) else Money.create(start, currency)
+        if not self.validate():
+            raise ValueError(f"Invalid money interval: {self.start} - {self.end}")
+
+    def validate(self) -> bool:
+        return self.start.currency == self.end.currency and (
+            self.start < self.end or self.start == self.end
         )
-        end_money = end if isinstance(end, Money) else Money.create(end, currency)
-
-        if start_money.currency != end_money.currency:
-            raise Exception("Cannot create money interval with different currencies")
-
-        if start_money > end_money:
-            raise Exception("Money interval start is greater than end")
-
-        interval = MoneyInterval()
-        interval.start = start_money
-        interval.end = end_money
-        return interval
 
     def __str__(self) -> str:
         return f"{self.start} - {self.end} {self.currency}"
+
+    def __repr__(self) -> str:
+        return f"MoneyInterval({self})"
+
+    def parse(s: str):
+        start, end = s.split(" - ")
+        return Money(start), Money(end)
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, MoneyInterval)
+            and self.start == other.start
+            and self.end == other.end
+        )

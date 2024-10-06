@@ -1,17 +1,17 @@
 import pytest
-from schema import Schema, DataType
+from schema import Schema, DataTypeNames
 from table import Table
-from datatypes.money import Money, MoneyInterval
+import datatypes
 
 
 @pytest.fixture
 def sample_schema() -> Schema:
     return Schema(
         {
-            "id": DataType.INTEGER,
-            "name": DataType.STRING,
-            "price": DataType.MONEY,
-            "interval": DataType.MONEY_INTERVAL,
+            "id": DataTypeNames.INTEGER,
+            "name": DataTypeNames.STRING,
+            "price": DataTypeNames.MONEY,
+            "interval": DataTypeNames.MONEY_INTERVAL,
         }
     )
 
@@ -25,12 +25,17 @@ def test_insert_valid_row(sample_table: Table):
     row = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     sample_table.insert(row)
     assert len(sample_table.rows) == 1
-    assert sample_table.rows[0] == row
+    assert sample_table.rows[0] == {
+        "id": datatypes.Integer(1),
+        "name": datatypes.String("Widget"),
+        "price": datatypes.Money("100 USD"),
+        "interval": datatypes.MoneyInterval("100 USD - 200 USD"),
+    }
 
 
 def test_insert_invalid_money(sample_table: Table):
@@ -38,7 +43,7 @@ def test_insert_invalid_money(sample_table: Table):
         "id": 1,
         "name": "Widget",
         "price": "not_money",
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "interval": "100 USD - 200 USD",
     }
     with pytest.raises(Exception, match="Invalid row"):
         sample_table.insert(row)
@@ -48,7 +53,7 @@ def test_insert_invalid_money_interval(sample_table: Table):
     row = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
+        "price": "100 USD",
         "interval": "not_money_interval",
     }
     with pytest.raises(Exception, match="Invalid row"):
@@ -59,8 +64,8 @@ def test_insert_invalid_integer(sample_table: Table):
     row = {
         "id": "not_an_integer",
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     with pytest.raises(Exception, match="Invalid row"):
         sample_table.insert(row)
@@ -70,8 +75,8 @@ def test_validate_valid_row(sample_table: Table):
     row = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     ok, reason = sample_table.validate(row)
     assert ok
@@ -83,23 +88,23 @@ def test_validate_invalid_row(sample_table: Table):
         "id": 1,
         "name": "Widget",
         "price": "invalid_money",
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "interval": "100 USD - 200 USD",
     }
     ok, reason = sample_table.validate(row)
     assert not ok
-    assert "Invalid value for field `price`" in reason
+    assert "Invalid field price" in reason
 
 
 def test_select_columns(sample_table: Table):
     row = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     sample_table.insert(row)
     result = sample_table.select(["id", "name"])
-    expected = [{"id": 1, "name": "Widget"}]
+    expected = [{"id": datatypes.Integer(1), "name": datatypes.String("Widget")}]
     assert result == expected
 
 
@@ -107,60 +112,60 @@ def test_delete_row(sample_table: Table):
     row1 = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     row2 = {
         "id": 2,
         "name": "Gadget",
-        "price": Money.create(200, "USD"),
-        "interval": MoneyInterval.create(150, 250, "USD"),
+        "price": "200 USD",
+        "interval": "150 USD - 250 USD",
     }
     sample_table.insert(row1)
     sample_table.insert(row2)
 
     sample_table.delete({"id": 1})
     assert len(sample_table.rows) == 1
-    assert sample_table.rows[0]["id"] == 2
+    assert sample_table.rows[0]["id"] == datatypes.Integer(2)
 
 
 def test_update_row(sample_table: Table):
     row = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     sample_table.insert(row)
 
-    sample_table.update({"id": 1}, {"price": Money.create(150, "USD")})
-    assert sample_table.rows[0]["price"] == Money.create(150, "USD")
+    sample_table.update({"id": 1}, {"price": "150 USD"})
+    assert sample_table.rows[0]["price"] == datatypes.Money("150 USD")
 
 
 def test_union_success(sample_table: Table):
     row1 = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     row2 = {
         "id": 2,
         "name": "Gadget",
-        "price": Money.create(200, "USD"),
-        "interval": MoneyInterval.create(150, 250, "USD"),
+        "price": "200 USD",
+        "interval": "150 USD - 250 USD",
     }
     row3 = {
         "id": 3,
         "name": "Thing",
-        "price": Money.create(300, "USD"),
-        "interval": MoneyInterval.create(250, 350, "USD"),
+        "price": "300 USD",
+        "interval": "250 USD - 350 USD",
     }
     row4 = {
         "id": 4,
         "name": "Doohickey",
-        "price": Money.create(400, "USD"),
-        "interval": MoneyInterval.create(350, 450, "USD"),
+        "price": "400 USD",
+        "interval": "350 USD - 450 USD",
     }
 
     sample_table.insert(row1)
@@ -172,24 +177,44 @@ def test_union_success(sample_table: Table):
 
     result = sample_table.union(other_table)
     assert len(result.rows) == 4
-    assert result.rows[0] == row1
-    assert result.rows[1] == row2
-    assert result.rows[2] == row3
-    assert result.rows[3] == row4
+    assert result.rows[0] == {
+        "id": datatypes.Integer(1),
+        "name": datatypes.String("Widget"),
+        "price": datatypes.Money("100 USD"),
+        "interval": datatypes.MoneyInterval("100 USD - 200 USD"),
+    }
+    assert result.rows[1] == {
+        "id": datatypes.Integer(2),
+        "name": datatypes.String("Gadget"),
+        "price": datatypes.Money("200 USD"),
+        "interval": datatypes.MoneyInterval("150 USD - 250 USD"),
+    }
+    assert result.rows[2] == {
+        "id": datatypes.Integer(3),
+        "name": datatypes.String("Thing"),
+        "price": datatypes.Money("300 USD"),
+        "interval": datatypes.MoneyInterval("250 USD - 350 USD"),
+    }
+    assert result.rows[3] == {
+        "id": datatypes.Integer(4),
+        "name": datatypes.String("Doohickey"),
+        "price": datatypes.Money("400 USD"),
+        "interval": datatypes.MoneyInterval("350 USD - 450 USD"),
+    }
 
 
 def test_union_failure(sample_table: Table):
     row1 = {
         "id": 1,
         "name": "Widget",
-        "price": Money.create(100, "USD"),
-        "interval": MoneyInterval.create(100, 200, "USD"),
+        "price": "100 USD",
+        "interval": "100 USD - 200 USD",
     }
     row2 = {
         "id": 2,
         "name": "Gadget",
-        "price": Money.create(200, "USD"),
-        "interval": MoneyInterval.create(150, 250, "USD"),
+        "price": "200 USD",
+        "interval": "150 USD - 250 USD",
     }
     row3 = {
         "id": 3,
@@ -204,7 +229,8 @@ def test_union_failure(sample_table: Table):
     sample_table.insert(row2)
 
     other_table = Table(
-        "other_products", Schema({"id": DataType.INTEGER, "name": DataType.STRING})
+        "other_products",
+        Schema({"id": DataTypeNames.INTEGER, "name": DataTypeNames.STRING}),
     )
     other_table.insert(row3)
     other_table.insert(row4)

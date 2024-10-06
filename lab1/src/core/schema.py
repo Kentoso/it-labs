@@ -1,14 +1,24 @@
+import datatypes
 from enum import Enum
-from datatypes.money import Money, MoneyInterval
 
 
-class DataType(str, Enum):
+class DataTypeNames(str, Enum):
     INTEGER = "integer"
     REAL = "real"
     CHAR = "char"
     STRING = "string"
     MONEY = "money"
     MONEY_INTERVAL = "money_interval"
+
+
+name_to_datatype = {
+    DataTypeNames.INTEGER: datatypes.Integer,
+    DataTypeNames.REAL: datatypes.Real,
+    DataTypeNames.CHAR: datatypes.Char,
+    DataTypeNames.STRING: datatypes.String,
+    DataTypeNames.MONEY: datatypes.Money,
+    DataTypeNames.MONEY_INTERVAL: datatypes.MoneyInterval,
+}
 
 
 class Schema:
@@ -35,36 +45,20 @@ class Schema:
 
         return True
 
-    def _validate_field(self, field: str, value):
-        field_type = self.fields[field]
-        print(field_type, value, type(value))
-
-        if field_type == DataType.INTEGER:
-            return isinstance(value, int) and value >= -(2**31) and value <= 2**31 - 1
-
-        if field_type == DataType.REAL:
-            return isinstance(value, float)
-
-        if field_type == DataType.CHAR:
-            return isinstance(value, str) and len(value) == 1
-
-        if field_type == DataType.STRING:
-            print(value, type(value))
-            return isinstance(value, str)
-
-        if field_type == DataType.MONEY:
-            # (isinstance(value, str) and Money.parse(value)) or
-            return isinstance(value, Money)
-
-        if field_type == DataType.MONEY_INTERVAL:
-            return isinstance(value, MoneyInterval)
-
     def validate(self, row: dict):
+        result = {}
         for field, value in row.items():
             if field not in self.fields:
                 return False, f"Unknown field: {field}"
 
-            if not self._validate_field(field, value):
-                return False, f"Invalid value for field `{field}`: {value}"
+            field_type = self.fields[field]
 
-        return True, None
+            field_type = name_to_datatype[field_type]
+
+            try:
+                field_value = field_type(value)
+                result[field] = field_value
+            except ValueError as e:
+                return None, f"Invalid field {field}: {str(e)}"
+
+        return result, None

@@ -8,11 +8,11 @@ class Table:
         self.rows: list[dict] = []
 
     def insert(self, row: dict):
-        ok, reason = self.schema.validate(row)
-        if not ok:
+        validated_row, reason = self.schema.validate(row)
+        if not validated_row:
             raise Exception(f"Invalid row: {reason}")
 
-        self.rows.append(row)
+        self.rows.append(validated_row)
 
     def validate(self, row: dict):
         return self.schema.validate(row)
@@ -24,16 +24,28 @@ class Table:
         return [{col: row[col] for col in columns} for row in self.rows]
 
     def delete(self, condition: dict):
+        validated_condition, reason = self.schema.validate(condition)
+        if not validated_condition:
+            raise Exception(f"Invalid condition: {reason}")
+
         self.rows = [
             row
             for row in self.rows
-            if not all(row[k] == v for k, v in condition.items())
+            if not all(row[k] == v for k, v in validated_condition.items())
         ]
 
     def update(self, condition: dict, new_values: dict):
+        validated_condition, reason = self.schema.validate(condition)
+        if not validated_condition:
+            raise Exception(f"Invalid condition: {reason}")
+
+        validated_new_values, reason = self.schema.validate(new_values)
+        if not validated_new_values:
+            raise Exception(f"Invalid new values: {reason}")
+
         for row in self.rows:
-            if all(row[k] == v for k, v in condition.items()):
-                row.update(new_values)
+            if all(row[k] == v for k, v in validated_condition.items()):
+                row.update(validated_new_values)
 
     def rename(self, new_name: str):
         self.name = new_name

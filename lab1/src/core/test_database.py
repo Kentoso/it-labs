@@ -2,6 +2,7 @@ import pytest
 from schema import Schema
 from table import Table
 from database import Database
+import datatypes
 
 
 def test_create_table():
@@ -11,8 +12,14 @@ def test_create_table():
     table = db.create_table("users", schema, data)
     assert table.name == "users"
     assert len(table.rows) == 2
-    assert table.rows[0] == {"name": "Alice", "age": 25}
-    assert table.rows[1] == {"name": "Bob", "age": 30}
+    assert table.rows[0] == {
+        "name": datatypes.String("Alice"),
+        "age": datatypes.Integer(25),
+    }
+    assert table.rows[1] == {
+        "name": datatypes.String("Bob"),
+        "age": datatypes.Integer(30),
+    }
 
 
 def test_create_table_duplicate():
@@ -58,5 +65,5 @@ def test_invalid_data():
         db.create_table("users", schema, data)
     assert (
         str(e.value)
-        == "Invalid data: Invalid row: Invalid value for field `age`: invalid"
+        == "Invalid data: Invalid row: Invalid field age: Invalid integer: invalid"
     )
