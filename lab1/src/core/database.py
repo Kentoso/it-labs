@@ -1,5 +1,6 @@
 from core.table import Table
 from core.schema import Schema
+import pickle
 
 
 class Database:
@@ -42,3 +43,12 @@ class Database:
                 return table
 
         raise Exception(f"Table {table_name} not found")
+
+    def save(self, file_path: str):
+        with open(file_path, "wb") as f:
+            pickle.dump(self, f)
+
+    @staticmethod
+    def load(file_path: str):
+        with open(file_path, "rb") as f:
+            return pickle.load(f)

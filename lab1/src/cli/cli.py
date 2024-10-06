@@ -176,6 +176,29 @@ def union_tables(table1_name, table2_name):
         print(f"Error performing union: {e}")
 
 
+def save_database(file_path):
+    if current_db is None:
+        print("No database selected. Use 'use <db_name>' to select a database.")
+        return
+
+    try:
+        databases[current_db].save(file_path)
+        print(f"Database '{current_db}' saved to '{file_path}'.")
+    except Exception as e:
+        print(f"Error saving database: {e}")
+
+
+def load_database(file_path):
+    global current_db
+    try:
+        db = Database.load(file_path)
+        databases[db.db_name] = db
+        current_db = db.db_name
+        print(f"Database '{db.db_name}' loaded and set as current database.")
+    except Exception as e:
+        print(f"Error loading database: {e}")
+
+
 def interactive_mode():
     print(
         "Entering interactive mode. Type 'exit' to quit or 'help' to see available commands."
@@ -210,6 +233,10 @@ def interactive_mode():
                 print(
                     "  union <table1_name> <table2_name> - Perform union operation on two tables"
                 )
+                print("  save <file_path> - Save the current database to a file")
+                print(
+                    "  load <file_path> - Load a database from a file and set it as current"
+                )
                 print("  exit - Exit the interactive mode")
             else:
                 args = user_input.split()
@@ -235,6 +262,10 @@ def interactive_mode():
                     delete_from_table(args[1], args[2])
                 elif command == "union" and len(args) == 3:
                     union_tables(args[1], args[2])
+                elif command == "save" and len(args) == 2:
+                    save_database(args[1])
+                elif command == "load" and len(args) == 2:
+                    load_database(args[1])
                 else:
                     print(
                         "Invalid command or arguments. Type 'help' for a list of commands."
