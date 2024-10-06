@@ -1,4 +1,4 @@
-from schema import Schema
+from core.schema import Schema
 
 
 class Table:

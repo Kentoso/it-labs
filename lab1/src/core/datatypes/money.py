@@ -1,5 +1,5 @@
 from functools import total_ordering
-from datatypes.datatype import DataType
+from core.datatypes.datatype import DataType
 
 
 class Money(DataType):

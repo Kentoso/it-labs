@@ -1,6 +1,5 @@
 import pytest
 from schema import Schema, DataTypeNames
-from datatypes.money import Money, MoneyInterval
 
 
 @pytest.fixture

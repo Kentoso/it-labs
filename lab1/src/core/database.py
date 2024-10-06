@@ -1,5 +1,5 @@
-from table import Table
-from schema import Schema
+from core.table import Table
+from core.schema import Schema
 
 
 class Database:

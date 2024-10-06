@@ -1,4 +1,4 @@
-from datatypes.datatype import DataType
+from core.datatypes.datatype import DataType
 
 
 class Real(DataType):
