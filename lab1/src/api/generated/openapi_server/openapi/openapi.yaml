@@ -1,0 +1,373 @@
+openapi: 3.0.0
+info:
+  title: Simple DBMS API
+  version: 1.0.0
+servers:
+- url: http://localhost:5000
+paths:
+  /databases:
+    post:
+      operationId: databases_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_databases_post_request'
+        required: true
+      responses:
+        "200":
+          description: Database created successfully
+        "400":
+          description: Database already exists
+      summary: Create a new database
+      tags:
+      - Databases
+      x-openapi-router-controller: openapi_server.controllers.databases_controller
+  /databases/{db_name}:
+    delete:
+      operationId: databases_db_name_delete
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Database deleted successfully
+        "404":
+          description: Database not found
+      summary: Delete a database
+      tags:
+      - Databases
+      x-openapi-router-controller: openapi_server.controllers.databases_controller
+    get:
+      operationId: databases_db_name_get
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Database found
+        "404":
+          description: Database not found
+      summary: Get details of a database
+      tags:
+      - Databases
+      x-openapi-router-controller: openapi_server.controllers.databases_controller
+  /databases/{db_name}/tables:
+    get:
+      operationId: databases_db_name_tables_get
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  type: string
+                type: array
+          description: A list of tables in the database
+        "404":
+          description: Database not found
+      summary: List all tables in a database
+      tags:
+      - Tables
+      x-openapi-router-controller: openapi_server.controllers.tables_controller
+    post:
+      operationId: databases_db_name_tables_post
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_databases__db_name__tables_post_request'
+        required: true
+      responses:
+        "200":
+          description: Table created successfully
+        "400":
+          description: Invalid schema or table already exists
+      summary: Create a new table in a database
+      tags:
+      - Tables
+      x-openapi-router-controller: openapi_server.controllers.tables_controller
+  /databases/{db_name}/tables/union:
+    post:
+      operationId: databases_db_name_tables_union_post
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_databases__db_name__tables_union_post_request'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties:
+                    type: string
+                  type: object
+                type: array
+          description: Union performed successfully
+        "400":
+          description: Tables not found or schemas do not match
+      summary: Perform a union operation between two tables
+      tags:
+      - Tables
+      x-openapi-router-controller: openapi_server.controllers.tables_controller
+  /databases/{db_name}/tables/{table_name}/rows:
+    delete:
+      operationId: databases_db_name_tables_table_name_rows_delete
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: table_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: condition
+        required: true
+        schema:
+          description: "Condition to match rows to delete (e.g., \"id=5\")"
+          type: string
+        style: form
+      responses:
+        "200":
+          description: Rows deleted successfully
+        "400":
+          description: Invalid condition or table not found
+      summary: Delete rows from a table
+      tags:
+      - Rows
+      x-openapi-router-controller: openapi_server.controllers.rows_controller
+    get:
+      operationId: databases_db_name_tables_table_name_rows_get
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: table_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: columns
+        required: false
+        schema:
+          description: Comma-separated list of columns to select
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  additionalProperties:
+                    type: string
+                  type: object
+                type: array
+          description: Rows selected successfully
+        "404":
+          description: Database or table not found
+      summary: Select rows from a table
+      tags:
+      - Rows
+      x-openapi-router-controller: openapi_server.controllers.rows_controller
+    post:
+      operationId: databases_db_name_tables_table_name_rows_post
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: table_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties:
+                type: string
+              type: object
+        required: true
+      responses:
+        "200":
+          description: Row inserted successfully
+        "400":
+          description: Invalid row or table not found
+      summary: Insert a row into a table
+      tags:
+      - Rows
+      x-openapi-router-controller: openapi_server.controllers.rows_controller
+    put:
+      operationId: databases_db_name_tables_table_name_rows_put
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: table_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_databases__db_name__tables__table_name__rows_put_request'
+        required: true
+      responses:
+        "200":
+          description: Rows updated successfully
+        "400":
+          description: Invalid condition or table not found
+      summary: Update rows in a table
+      tags:
+      - Rows
+      x-openapi-router-controller: openapi_server.controllers.rows_controller
+  /databases/{db_name}/tables/{table_name}/schema:
+    get:
+      operationId: databases_db_name_tables_table_name_schema_get
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: table_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                additionalProperties:
+                  type: string
+                type: object
+          description: Schema retrieved successfully
+        "404":
+          description: Database or table not found
+      summary: Get the schema of a table
+      tags:
+      - Tables
+      x-openapi-router-controller: openapi_server.controllers.tables_controller
+components:
+  schemas:
+    _databases__db_name__tables__table_name__rows_put_request:
+      properties:
+        condition:
+          description: Condition to match rows to update
+          title: condition
+          type: object
+        new_values:
+          description: New values to update in the matched rows
+          title: new_values
+          type: object
+      title: _databases__db_name__tables__table_name__rows_put_request
+      type: object
+    _databases_post_request:
+      properties:
+        name:
+          description: Name of the database to create
+          title: name
+          type: string
+      title: _databases_post_request
+      type: object
+    _databases__db_name__tables_union_post_request:
+      properties:
+        table1:
+          description: Name of the first table
+          title: table1
+          type: string
+        table2:
+          description: Name of the second table
+          title: table2
+          type: string
+      title: _databases__db_name__tables_union_post_request
+      type: object
+    _databases__db_name__tables_post_request:
+      properties:
+        table_name:
+          description: Name of the table to create
+          title: table_name
+          type: string
+        schema:
+          additionalProperties:
+            description: "Schema of the table (field_name: field_type)"
+            type: string
+          title: schema
+          type: object
+      title: _databases__db_name__tables_post_request
+      type: object
