@@ -3,9 +3,9 @@ from typing import Dict
 from typing import Tuple
 from typing import Union
 
-from openapi_server.models.databases_db_name_tables_post_request import DatabasesDbNameTablesPostRequest  # noqa: E501
-from openapi_server.models.databases_db_name_tables_union_post_request import DatabasesDbNameTablesUnionPostRequest  # noqa: E501
-from openapi_server import util
+from server.models.databases_db_name_tables_post_request import DatabasesDbNameTablesPostRequest  # noqa: E501
+from server.models.databases_db_name_tables_union_post_request import DatabasesDbNameTablesUnionPostRequest  # noqa: E501
+from server import util
 
 
 def databases_db_name_tables_get(db_name):  # noqa: E501

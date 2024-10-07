@@ -21,3 +21,7 @@
 #docs/*.md
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
+
+tox.ini
+test-requrements.txt
+openapi_server/test/*

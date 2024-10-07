@@ -9,6 +9,9 @@ api-generate:
 	cd src/api && \
 	docker run --rm -v ".:/local" openapitools/openapi-generator-cli generate \
 		-i /local/openapi.yaml \
+		--additional-properties=packageName=server \
+		--global-property=apiTests=false,modelTests=false \
 		-g python-flask \
 		-o /local/generated \
+
 

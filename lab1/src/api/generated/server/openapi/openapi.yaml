@@ -22,7 +22,7 @@ paths:
       summary: Create a new database
       tags:
       - Databases
-      x-openapi-router-controller: openapi_server.controllers.databases_controller
+      x-openapi-router-controller: server.controllers.databases_controller
   /databases/{db_name}:
     delete:
       operationId: databases_db_name_delete
@@ -42,7 +42,7 @@ paths:
       summary: Delete a database
       tags:
       - Databases
-      x-openapi-router-controller: openapi_server.controllers.databases_controller
+      x-openapi-router-controller: server.controllers.databases_controller
     get:
       operationId: databases_db_name_get
       parameters:
@@ -61,7 +61,7 @@ paths:
       summary: Get details of a database
       tags:
       - Databases
-      x-openapi-router-controller: openapi_server.controllers.databases_controller
+      x-openapi-router-controller: server.controllers.databases_controller
   /databases/{db_name}/tables:
     get:
       operationId: databases_db_name_tables_get
@@ -87,7 +87,7 @@ paths:
       summary: List all tables in a database
       tags:
       - Tables
-      x-openapi-router-controller: openapi_server.controllers.tables_controller
+      x-openapi-router-controller: server.controllers.tables_controller
     post:
       operationId: databases_db_name_tables_post
       parameters:
@@ -112,7 +112,7 @@ paths:
       summary: Create a new table in a database
       tags:
       - Tables
-      x-openapi-router-controller: openapi_server.controllers.tables_controller
+      x-openapi-router-controller: server.controllers.tables_controller
   /databases/{db_name}/tables/union:
     post:
       operationId: databases_db_name_tables_union_post
@@ -146,7 +146,7 @@ paths:
       summary: Perform a union operation between two tables
       tags:
       - Tables
-      x-openapi-router-controller: openapi_server.controllers.tables_controller
+      x-openapi-router-controller: server.controllers.tables_controller
   /databases/{db_name}/tables/{table_name}/rows:
     delete:
       operationId: databases_db_name_tables_table_name_rows_delete
@@ -181,7 +181,7 @@ paths:
       summary: Delete rows from a table
       tags:
       - Rows
-      x-openapi-router-controller: openapi_server.controllers.rows_controller
+      x-openapi-router-controller: server.controllers.rows_controller
     get:
       operationId: databases_db_name_tables_table_name_rows_get
       parameters:
@@ -223,7 +223,7 @@ paths:
       summary: Select rows from a table
       tags:
       - Rows
-      x-openapi-router-controller: openapi_server.controllers.rows_controller
+      x-openapi-router-controller: server.controllers.rows_controller
     post:
       operationId: databases_db_name_tables_table_name_rows_post
       parameters:
@@ -257,7 +257,7 @@ paths:
       summary: Insert a row into a table
       tags:
       - Rows
-      x-openapi-router-controller: openapi_server.controllers.rows_controller
+      x-openapi-router-controller: server.controllers.rows_controller
     put:
       operationId: databases_db_name_tables_table_name_rows_put
       parameters:
@@ -289,7 +289,7 @@ paths:
       summary: Update rows in a table
       tags:
       - Rows
-      x-openapi-router-controller: openapi_server.controllers.rows_controller
+      x-openapi-router-controller: server.controllers.rows_controller
   /databases/{db_name}/tables/{table_name}/schema:
     get:
       operationId: databases_db_name_tables_table_name_schema_get
@@ -322,7 +322,7 @@ paths:
       summary: Get the schema of a table
       tags:
       - Tables
-      x-openapi-router-controller: openapi_server.controllers.tables_controller
+      x-openapi-router-controller: server.controllers.tables_controller
 components:
   schemas:
     _databases__db_name__tables__table_name__rows_put_request:

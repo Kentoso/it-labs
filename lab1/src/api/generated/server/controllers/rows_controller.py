@@ -3,8 +3,8 @@ from typing import Dict
 from typing import Tuple
 from typing import Union
 
-from openapi_server.models.databases_db_name_tables_table_name_rows_put_request import DatabasesDbNameTablesTableNameRowsPutRequest  # noqa: E501
-from openapi_server import util
+from server.models.databases_db_name_tables_table_name_rows_put_request import DatabasesDbNameTablesTableNameRowsPutRequest  # noqa: E501
+from server import util
 
 
 def databases_db_name_tables_table_name_rows_delete(db_name, table_name, condition):  # noqa: E501
