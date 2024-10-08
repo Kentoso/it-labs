@@ -1,10 +1,6 @@
 import connexion
-from typing import Dict
-from typing import Tuple
-from typing import Union
 
 from server.models.row_update import RowUpdate  # noqa: E501
-from server import util
 
 from flask import g
 from service.database_service import AbstractDatabaseService

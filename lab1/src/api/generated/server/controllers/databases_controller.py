@@ -1,12 +1,8 @@
 import os
 
 import connexion
-from typing import Dict
-from typing import Tuple
-from typing import Union
 
 from server.models.database_create import DatabaseCreate  # noqa: E501
-from server import util
 from flask import g
 from service.database_service import AbstractDatabaseService
 

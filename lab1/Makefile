@@ -15,4 +15,4 @@ api-generate:
 		-o /local/generated \
 
 api:
-	docker compose -f api-docker-compose.yaml up --build
+	docker compose -f api-docker-compose.yaml up --build -d
