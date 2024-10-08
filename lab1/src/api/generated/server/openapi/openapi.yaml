@@ -43,25 +43,6 @@ paths:
       tags:
       - Databases
       x-openapi-router-controller: server.controllers.databases_controller
-    get:
-      operationId: get_database_details
-      parameters:
-      - explode: false
-        in: path
-        name: db_name
-        required: true
-        schema:
-          type: string
-        style: simple
-      responses:
-        "200":
-          description: Database found
-        "404":
-          description: Database not found
-      summary: Get details of a database
-      tags:
-      - Databases
-      x-openapi-router-controller: server.controllers.databases_controller
   /databases/{db_name}/tables:
     get:
       operationId: list_tables

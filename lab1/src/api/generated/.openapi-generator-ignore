@@ -29,5 +29,6 @@ openapi_server/test/*
 README.md
 .gitignore
 
-databases_controller.py
-tables_controller.py
+server/controllers/databases_controller.py
+server/controllers/tables_controller.py
+server/controllers/rows_controller.py

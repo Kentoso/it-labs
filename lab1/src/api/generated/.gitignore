@@ -72,3 +72,5 @@ setup.py
 test-requirements.txt
 
 .travis.yml
+
+Dockerfile

@@ -71,22 +71,6 @@ paths:
           description: Database already exists
 
   /databases/{db_name}:
-    get:
-      operationId: getDatabaseDetails
-      tags:
-        - Databases
-      summary: Get details of a database
-      parameters:
-        - name: db_name
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Database found
-        '404':
-          description: Database not found
     delete:
       operationId: deleteDatabase
       tags:
