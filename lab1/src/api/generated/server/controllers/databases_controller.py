@@ -10,8 +10,6 @@ from server import util
 from flask import g
 from service.database_service import AbstractDatabaseService
 
-database_service: AbstractDatabaseService = g.database_service
-
 
 def create_database(database_create):  # noqa: E501
     """Create a new database
@@ -23,6 +21,8 @@ def create_database(database_create):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     if connexion.request.is_json:
         database_create = DatabaseCreate.from_dict(connexion.request.get_json())
         try:
@@ -47,6 +47,8 @@ def delete_database(db_name):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     try:
         database_service.load_database(f"{db_name}.pickle")
         os.remove(f"{db_name}.pickle")

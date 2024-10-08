@@ -14,4 +14,5 @@ api-generate:
 		-g python-flask \
 		-o /local/generated \
 
-
+api:
+	docker compose -f api-docker-compose.yaml up --build

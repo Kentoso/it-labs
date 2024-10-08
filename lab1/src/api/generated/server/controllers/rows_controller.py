@@ -9,8 +9,6 @@ from server import util
 from flask import g
 from service.database_service import AbstractDatabaseService
 
-database_service: AbstractDatabaseService = g.database_service
-
 
 def delete_rows(db_name, table_name, condition):  # noqa: E501
     """Delete rows from a table
@@ -26,6 +24,8 @@ def delete_rows(db_name, table_name, condition):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     try:
         condition = {
             k.strip(): v.strip()
@@ -54,6 +54,8 @@ def insert_row(db_name, table_name, request_body):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     try:
         databases = {}
         database_service.load_database(databases, f"{db_name}.pickle")
@@ -78,6 +80,8 @@ def select_rows(db_name, table_name, columns=None):  # noqa: E501
 
     :rtype: Union[List[Dict[str, str]], Tuple[List[Dict[str, str]], int], Tuple[List[Dict[str, str]], int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     try:
         databases = {}
         database_service.load_database(databases, f"{db_name}.pickle")
@@ -103,6 +107,8 @@ def update_rows(db_name, table_name, row_update):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     if connexion.request.is_json:
         row_update = RowUpdate.from_dict(connexion.request.get_json())  # noqa: E501
         try:

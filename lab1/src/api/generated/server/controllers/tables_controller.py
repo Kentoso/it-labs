@@ -10,8 +10,6 @@ from server import util
 from flask import g
 from service.database_service import AbstractDatabaseService
 
-database_service: AbstractDatabaseService = g.database_service
-
 
 def create_table(db_name, table_create):  # noqa: E501
     """Create a new table in a database
@@ -25,6 +23,8 @@ def create_table(db_name, table_create):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     if connexion.request.is_json:
         table_create = TableCreate.from_dict(connexion.request.get_json())  # noqa: E501
         try:
@@ -53,6 +53,8 @@ def get_table_schema(db_name, table_name):  # noqa: E501
 
     :rtype: Union[Dict[str, str], Tuple[Dict[str, str], int], Tuple[Dict[str, str], int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     try:
         databases = {}
         database_service.load_database(databases, f"{db_name}.pickle")
@@ -72,6 +74,8 @@ def list_tables(db_name):  # noqa: E501
 
     :rtype: Union[List[str], Tuple[List[str], int], Tuple[List[str], int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     try:
         databases = {}
         database_service.load_database(databases, f"{db_name}.pickle")
@@ -93,6 +97,8 @@ def perform_table_union(db_name, table_union):  # noqa: E501
 
     :rtype: Union[List[Dict[str, str]], Tuple[List[Dict[str, str]], int], Tuple[List[Dict[str, str]], int, Dict[str, str]]
     """
+    database_service: AbstractDatabaseService = g.database_service
+
     if connexion.request.is_json:
         table_union = TableUnion.from_dict(connexion.request.get_json())  # noqa: E501
         try:
