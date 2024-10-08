@@ -4,7 +4,7 @@ import connexion
 
 from server import encoder
 from flask import g
-from service.database_service import AbstractDatabaseService, DatabaseService
+from service.database_service import DatabaseService
 
 
 def main():

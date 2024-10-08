@@ -1,5 +1,4 @@
 import os
-import pytest
 import requests
 import json
 
@@ -95,3 +94,74 @@ def test_end_to_end():
     # assert response.status_code == 404
 
     print("End-to-end test passed")
+
+
+def test_table_union():
+    db_name = "test_db"
+
+    # Create a database
+    response = requests.post(f"{base_url}/databases", json={"name": db_name})
+    assert response.status_code == 201
+
+    # Create a table
+    schema = {
+        "id": "integer",
+        "price": "money",
+        "description": "string",
+        "rating": "real",
+        "currency_code": "char",
+        "price_range": "money_interval",
+    }
+    response = requests.post(
+        f"{base_url}/databases/{db_name}/tables",
+        json={"table_name": "products_1", "schema": schema},
+    )
+    assert response.status_code == 201
+
+    response = requests.post(
+        f"{base_url}/databases/{db_name}/tables",
+        json={"table_name": "products_2", "schema": schema},
+    )
+    assert response.status_code == 201
+
+    # Insert a row
+    row = {
+        "id": 1,
+        "price": "50 USD",
+        "description": "A great product",
+        "rating": 4.8,
+        "currency_code": "U",
+        "price_range": "40 USD - 60 USD",
+    }
+    response = requests.post(
+        f"{base_url}/databases/{db_name}/tables/products_1/rows", json=row
+    )
+    assert response.status_code == 201
+
+    # Insert a row
+    row = {
+        "id": 2,
+        "price": "25 USD",
+        "description": "A not so great product",
+        "rating": 128.2,
+        "currency_code": "S",
+        "price_range": "25 USD - 40 USD",
+    }
+    response = requests.post(
+        f"{base_url}/databases/{db_name}/tables/products_2/rows", json=row
+    )
+    assert response.status_code == 201
+
+    # Union tables
+    response = requests.post(
+        f"{base_url}/databases/{db_name}/tables/union",
+        json={"table1": "products_1", "table2": "products_2"},
+    )
+    assert response.status_code == 200
+
+    # Select from the union table
+    response = requests.get(
+        f"{base_url}/databases/{db_name}/tables/products_1_union_products_2/rows"
+    )
+    print("abc", response.json())
+    assert response.status_code == 200

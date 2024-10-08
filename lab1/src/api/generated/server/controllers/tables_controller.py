@@ -5,6 +5,7 @@ from server.models.table_union import TableUnion  # noqa: E501
 
 from flask import g
 from service.database_service import AbstractDatabaseService
+import jsonpickle
 
 
 def create_table(db_name, table_create):  # noqa: E501
@@ -107,9 +108,10 @@ def perform_table_union(db_name, table_union):  # noqa: E501
             databases = {}
             database_service.load_database_json(databases, f"{db_name}.json")
             result = database_service.union_tables(
-                databases, db_name, table_union.table1_name, table_union.table2_name
+                databases, db_name, table_union.table1, table_union.table2
             )
-            return result, 200
+            database_service.save_database_json(databases, db_name, f"{db_name}.json")
+            return result.name, 200
         except ValueError as e:
             return {"error": str(e)}, 400
 

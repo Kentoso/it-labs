@@ -187,7 +187,9 @@ class DatabaseService:
             raise ValueError("No database selected.")
         table1 = databases[current_db].get_table(table1_name)
         table2 = databases[current_db].get_table(table2_name)
-        return table1.union(table2)
+        union = table1.union(table2)
+        databases[current_db].tables.append(union)
+        return union
 
     def save_database(self, databases: dict[str, Database], current_db: str, file_path):
         if current_db is None:
