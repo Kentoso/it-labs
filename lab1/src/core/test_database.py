@@ -1,8 +1,8 @@
 import pytest
-from schema import Schema
-from table import Table
-from database import Database
-import datatypes
+from .schema import Schema
+from .table import Table
+from .database import Database
+from . import datatypes
 
 
 def test_create_table():

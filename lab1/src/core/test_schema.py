@@ -1,5 +1,5 @@
 import pytest
-from schema import Schema, DataTypeNames
+from .schema import Schema, DataTypeNames
 
 
 @pytest.fixture

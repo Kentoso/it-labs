@@ -1,7 +1,7 @@
 import pytest
-from schema import Schema, DataTypeNames
-from table import Table
-import datatypes
+from .schema import Schema, DataTypeNames
+from .table import Table
+from . import datatypes
 
 
 @pytest.fixture
