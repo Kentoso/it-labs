@@ -38,6 +38,9 @@ class Money(DataType):
         else:
             return f"{self.value // 100} {self.currency}"
 
+    def to_json_value(self):
+        return self.__str__()
+
     def __repr__(self) -> str:
         return f"Money({self})"
 
@@ -73,7 +76,10 @@ class MoneyInterval(DataType):
         )
 
     def __str__(self) -> str:
-        return f"{self.start} - {self.end} {self.currency}"
+        return f"{self.start} - {self.end}"
+
+    def to_json_value(self):
+        return self.__str__()
 
     def __repr__(self) -> str:
         return f"MoneyInterval({self})"

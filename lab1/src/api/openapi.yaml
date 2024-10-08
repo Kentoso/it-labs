@@ -21,26 +21,15 @@ components:
           description: Name of the table to create
         schema:
           type: object
-          additionalProperties:
-            type: string
-          description: "Schema of the table as a dictionary (field_name: field_type)"
     RowInsert:
       type: object
-      additionalProperties:
-        type: string
     RowUpdate:
       type: object
       properties:
         condition:
           type: object
-          additionalProperties:
-            type: string
-          description: Condition to match rows to update as a dictionary
         new_values:
           type: object
-          additionalProperties:
-            type: string
-          description: New values to update in the matched rows as a dictionary
     TableUnion:
       type: object
       properties:
@@ -64,6 +53,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DatabaseCreate'
+        x-body-name: database_create
       responses:
         '200':
           description: Database created successfully
@@ -106,6 +96,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TableCreate'
+        x-body-name: table_create
       responses:
         '200':
           description: Table created successfully
@@ -186,6 +177,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RowInsert'
+        x-body-name: row_insert
       responses:
         '200':
           description: Row inserted successfully
@@ -213,6 +205,11 @@ paths:
           schema:
             type: string
             description: Comma-separated list of columns to select
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Rows selected successfully
@@ -248,6 +245,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/RowUpdate'
+        x-body-name: row_update
       responses:
         '200':
           description: Rows updated successfully
@@ -299,6 +297,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TableUnion'
+        x-body-name: table_union
       responses:
         '200':
           description: Union performed successfully

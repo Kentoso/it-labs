@@ -19,3 +19,9 @@ class Integer(DataType):
 
     def __repr__(self) -> str:
         return f"Integer({self.value})"
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+    def to_json_value(self):
+        return self.value

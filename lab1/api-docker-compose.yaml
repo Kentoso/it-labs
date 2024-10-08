@@ -5,3 +5,8 @@ services:
       dockerfile: ./api/Dockerfile
     ports:
       - "8080:8080"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./src/api/generated
+          target: /usr/src/app

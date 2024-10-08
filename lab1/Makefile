@@ -16,3 +16,6 @@ api-generate:
 
 api:
 	docker compose -f api-docker-compose.yaml up --build -d
+
+watch-api:
+	docker compose -f api-docker-compose.yaml watch

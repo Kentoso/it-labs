@@ -16,13 +16,13 @@ class RowUpdate(Model):
         """RowUpdate - a model defined in OpenAPI
 
         :param condition: The condition of this RowUpdate.  # noqa: E501
-        :type condition: Dict[str, str]
+        :type condition: object
         :param new_values: The new_values of this RowUpdate.  # noqa: E501
-        :type new_values: Dict[str, str]
+        :type new_values: object
         """
         self.openapi_types = {
-            'condition': Dict[str, str],
-            'new_values': Dict[str, str]
+            'condition': object,
+            'new_values': object
         }
 
         self.attribute_map = {
@@ -45,47 +45,43 @@ class RowUpdate(Model):
         return util.deserialize_model(dikt, cls)
 
     @property
-    def condition(self) -> Dict[str, str]:
+    def condition(self) -> object:
         """Gets the condition of this RowUpdate.
 
-        Condition to match rows to update as a dictionary  # noqa: E501
 
         :return: The condition of this RowUpdate.
-        :rtype: Dict[str, str]
+        :rtype: object
         """
         return self._condition
 
     @condition.setter
-    def condition(self, condition: Dict[str, str]):
+    def condition(self, condition: object):
         """Sets the condition of this RowUpdate.
 
-        Condition to match rows to update as a dictionary  # noqa: E501
 
         :param condition: The condition of this RowUpdate.
-        :type condition: Dict[str, str]
+        :type condition: object
         """
 
         self._condition = condition
 
     @property
-    def new_values(self) -> Dict[str, str]:
+    def new_values(self) -> object:
         """Gets the new_values of this RowUpdate.
 
-        New values to update in the matched rows as a dictionary  # noqa: E501
 
         :return: The new_values of this RowUpdate.
-        :rtype: Dict[str, str]
+        :rtype: object
         """
         return self._new_values
 
     @new_values.setter
-    def new_values(self, new_values: Dict[str, str]):
+    def new_values(self, new_values: object):
         """Sets the new_values of this RowUpdate.
 
-        New values to update in the matched rows as a dictionary  # noqa: E501
 
         :param new_values: The new_values of this RowUpdate.
-        :type new_values: Dict[str, str]
+        :type new_values: object
         """
 
         self._new_values = new_values

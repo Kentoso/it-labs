@@ -21,15 +21,21 @@ def create_table(db_name, table_create):  # noqa: E501
     """
     database_service: AbstractDatabaseService = g.database_service
 
+    print("CREATE TABLE")
     if connexion.request.is_json:
         table_create = TableCreate.from_dict(connexion.request.get_json())  # noqa: E501
         try:
             databases = {}
-            database_service.load_database(databases, f"{db_name}.pickle")
+            databases[db_name] = database_service.load_database_json(
+                databases, f"{db_name}.json"
+            )
+            print(databases)
             database_service.create_table(
                 databases, db_name, table_create.table_name, table_create._schema
             )
-            database_service.save_database(databases, db_name, f"{db_name}.pickle")
+            print(databases)
+            database_service.save_database_json(databases, db_name, f"{db_name}.json")
+            print(f"Table {table_create.table_name} created in database {db_name}")
             return None, 201
         except ValueError as e:
             return {"error": str(e)}, 400
@@ -53,7 +59,7 @@ def get_table_schema(db_name, table_name):  # noqa: E501
 
     try:
         databases = {}
-        database_service.load_database(databases, f"{db_name}.pickle")
+        database_service.load_database_json(databases, f"{db_name}.json")
         schema = database_service.get_table_schema(databases, db_name, table_name)
         return schema, 200
     except ValueError as e:
@@ -74,7 +80,7 @@ def list_tables(db_name):  # noqa: E501
 
     try:
         databases = {}
-        database_service.load_database(databases, f"{db_name}.pickle")
+        database_service.load_database_json(databases, f"{db_name}.json")
         tables = database_service.list_tables(databases, db_name)
         return tables, 200
     except ValueError as e:
@@ -99,7 +105,7 @@ def perform_table_union(db_name, table_union):  # noqa: E501
         table_union = TableUnion.from_dict(connexion.request.get_json())  # noqa: E501
         try:
             databases = {}
-            database_service.load_database(databases, f"{db_name}.pickle")
+            database_service.load_database_json(databases, f"{db_name}.json")
             result = database_service.union_tables(
                 databases, db_name, table_union.table1_name, table_union.table2_name
             )

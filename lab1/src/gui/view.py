@@ -246,7 +246,8 @@ class View:
         )
         if file_path:
             try:
-                self.current_db = self.service.load_database(self.databases, file_path)
+                db = self.service.load_database(self.databases, file_path)
+                self.current_db = db.db_name
                 messagebox.showinfo(
                     "Success",
                     f"Database '{self.current_db}' loaded and set as current database.",

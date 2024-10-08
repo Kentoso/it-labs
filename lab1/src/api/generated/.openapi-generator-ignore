@@ -32,3 +32,9 @@ README.md
 server/controllers/databases_controller.py
 server/controllers/tables_controller.py
 server/controllers/rows_controller.py
+
+test/__init__.py
+
+__main__.py
+
+requirements.txt

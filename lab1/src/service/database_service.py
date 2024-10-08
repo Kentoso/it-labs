@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
 from core.database import Database
 from core.schema import Schema
+import logging
+import json
+import jsonpickle
 
 
 class AbstractDatabaseService(ABC):
@@ -40,7 +43,12 @@ class AbstractDatabaseService(ABC):
 
     @abstractmethod
     def select_from_table(
-        self, databases: dict[str, Database], current_db: str, table_name, columns=None
+        self,
+        databases: dict[str, Database],
+        current_db: str,
+        table_name,
+        columns=None,
+        filter=None,
     ):
         pass
 
@@ -75,6 +83,19 @@ class AbstractDatabaseService(ABC):
     def load_database(self, databases: dict[str, Database], file_path):
         pass
 
+    @abstractmethod
+    def save_database_json(
+        self, databases: dict[str, Database], current_db: str, file_path
+    ):
+        pass
+
+    @abstractmethod
+    def load_database_json(self, databases: dict[str, Database], file_path):
+        pass
+
+
+logger = logging.getLogger(__name__)
+
 
 class DatabaseService:
     def create_database(self, databases: dict[str, Database], db_name):
@@ -99,6 +120,7 @@ class DatabaseService:
             raise ValueError("No database selected.")
         schema = Schema(schema_fields)
         databases[current_db].create_table(table_name, schema)
+        logger.info(f"Table {table_name} created in database {current_db}")
 
     def list_tables(self, databases: dict[str, Database], current_db):
         if current_db is None:
@@ -122,13 +144,19 @@ class DatabaseService:
         table.insert(values)
 
     def select_from_table(
-        self, databases: dict[str, Database], current_db: str, table_name, columns=None
+        self,
+        databases: dict[str, Database],
+        current_db: str,
+        table_name,
+        columns=None,
+        filter=None,
     ):
         if current_db is None:
             raise ValueError("No database selected.")
-        print(databases[current_db].tables)
         table = databases[current_db].get_table(table_name)
-        return table.select(columns)
+        rows = table.select(columns, filter)
+        rows = [{k: v.to_json_value() for k, v in row.items()} for row in rows]
+        return rows
 
     def update_table(
         self,
@@ -169,4 +197,21 @@ class DatabaseService:
     def load_database(self, databases: dict[str, Database], file_path):
         db = Database.load(file_path)
         databases[db.db_name] = db
-        return db.db_name
+        return db
+
+    def save_database_json(
+        self, databases: dict[str, Database], current_db: str, file_path
+    ):
+        if current_db is None:
+            raise ValueError("No database selected.")
+
+        json_str = jsonpickle.encode(databases[current_db])
+        with open(file_path, "w") as f:
+            f.write(json_str)
+
+    def load_database_json(self, databases: dict[str, Database], file_path):
+        with open(file_path, "r") as f:
+            read_data = f.read()
+            db = jsonpickle.decode(read_data)
+            databases[db.db_name] = db
+            return db

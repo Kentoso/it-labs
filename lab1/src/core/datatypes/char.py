@@ -15,3 +15,9 @@ class Char(DataType):
 
     def __repr__(self) -> str:
         return f"Char({self.value})"
+
+    def __str__(self) -> str:
+        return self.value
+
+    def to_json_value(self):
+        return self.value

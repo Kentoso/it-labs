@@ -18,11 +18,11 @@ class TableCreate(Model):
         :param table_name: The table_name of this TableCreate.  # noqa: E501
         :type table_name: str
         :param _schema: The _schema of this TableCreate.  # noqa: E501
-        :type _schema: Dict[str, str]
+        :type _schema: object
         """
         self.openapi_types = {
             'table_name': str,
-            '_schema': Dict[str, str]
+            '_schema': object
         }
 
         self.attribute_map = {
@@ -68,24 +68,22 @@ class TableCreate(Model):
         self._table_name = table_name
 
     @property
-    def _schema(self) -> Dict[str, str]:
+    def _schema(self) -> object:
         """Gets the _schema of this TableCreate.
 
-        Schema of the table as a dictionary (field_name: field_type)  # noqa: E501
 
         :return: The _schema of this TableCreate.
-        :rtype: Dict[str, str]
+        :rtype: object
         """
         return self.__schema
 
     @_schema.setter
-    def _schema(self, _schema: Dict[str, str]):
+    def _schema(self, _schema: object):
         """Sets the _schema of this TableCreate.
 
-        Schema of the table as a dictionary (field_name: field_type)  # noqa: E501
 
         :param _schema: The _schema of this TableCreate.
-        :type _schema: Dict[str, str]
+        :type _schema: object
         """
 
         self.__schema = _schema

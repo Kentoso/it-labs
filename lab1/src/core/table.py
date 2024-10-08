@@ -17,11 +17,23 @@ class Table:
     def validate(self, row: dict):
         return self.schema.validate(row)
 
-    def select(self, columns: list[str]):
+    def select(self, columns: list[str], filter: dict = None):
         if not columns:
             return self.rows
 
-        return [{col: row[col] for col in columns} for row in self.rows]
+        rows = self.rows
+        if filter:
+            validated_filter, reason = self.schema.validate(filter)
+            if not validated_filter:
+                raise Exception(f"Invalid filter: {reason}")
+
+            rows = [
+                row
+                for row in self.rows
+                if all(row[k] == v for k, v in validated_filter.items())
+            ]
+
+        return [{col: row[col] for col in columns} for row in rows]
 
     def delete(self, condition: dict):
         validated_condition, reason = self.schema.validate(condition)

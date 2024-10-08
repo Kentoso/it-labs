@@ -14,6 +14,7 @@ paths:
             schema:
               $ref: '#/components/schemas/DatabaseCreate'
         required: true
+        x-body-name: database_create
       responses:
         "200":
           description: Database created successfully
@@ -85,6 +86,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TableCreate'
         required: true
+        x-body-name: table_create
       responses:
         "200":
           description: Table created successfully
@@ -111,6 +113,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TableUnion'
         required: true
+        x-body-name: table_union
       responses:
         "200":
           content:
@@ -228,6 +231,7 @@ paths:
             schema:
               $ref: '#/components/schemas/RowInsert'
         required: true
+        x-body-name: row_insert
       responses:
         "200":
           description: Row inserted successfully
@@ -260,6 +264,7 @@ paths:
             schema:
               $ref: '#/components/schemas/RowUpdate'
         required: true
+        x-body-name: row_update
       responses:
         "200":
           description: Rows updated successfully
@@ -316,8 +321,7 @@ components:
       type: object
     TableCreate:
       example:
-        schema:
-          key: schema
+        schema: "{}"
         table_name: table_name
       properties:
         table_name:
@@ -325,34 +329,21 @@ components:
           title: table_name
           type: string
         schema:
-          additionalProperties:
-            type: string
-          description: "Schema of the table as a dictionary (field_name: field_type)"
           title: schema
           type: object
       title: TableCreate
       type: object
     RowInsert:
-      additionalProperties:
-        type: string
       type: object
     RowUpdate:
       example:
-        condition:
-          key: condition
-        new_values:
-          key: new_values
+        condition: "{}"
+        new_values: "{}"
       properties:
         condition:
-          additionalProperties:
-            type: string
-          description: Condition to match rows to update as a dictionary
           title: condition
           type: object
         new_values:
-          additionalProperties:
-            type: string
-          description: New values to update in the matched rows as a dictionary
           title: new_values
           type: object
       title: RowUpdate
