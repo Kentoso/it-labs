@@ -28,3 +28,6 @@ test-requrements.txt
 openapi_server/test/*
 README.md
 .gitignore
+
+databases_controller.py
+tables_controller.py

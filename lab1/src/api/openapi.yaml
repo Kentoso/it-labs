@@ -54,6 +54,7 @@ components:
 paths:
   /databases:
     post:
+      operationId: createDatabase
       tags:
         - Databases
       summary: Create a new database
@@ -71,6 +72,7 @@ paths:
 
   /databases/{db_name}:
     get:
+      operationId: getDatabaseDetails
       tags:
         - Databases
       summary: Get details of a database
@@ -86,6 +88,7 @@ paths:
         '404':
           description: Database not found
     delete:
+      operationId: deleteDatabase
       tags:
         - Databases
       summary: Delete a database
@@ -103,6 +106,7 @@ paths:
 
   /databases/{db_name}/tables:
     post:
+      operationId: createTable
       tags:
         - Tables
       summary: Create a new table in a database
@@ -124,6 +128,7 @@ paths:
         '400':
           description: Invalid schema or table already exists
     get:
+      operationId: listTables
       tags:
         - Tables
       summary: List all tables in a database
@@ -147,6 +152,7 @@ paths:
 
   /databases/{db_name}/tables/{table_name}/schema:
     get:
+      operationId: getTableSchema
       tags:
         - Tables
       summary: Get the schema of a table
@@ -175,6 +181,7 @@ paths:
 
   /databases/{db_name}/tables/{table_name}/rows:
     post:
+      operationId: insertRow
       tags:
         - Rows
       summary: Insert a row into a table
@@ -201,6 +208,7 @@ paths:
         '400':
           description: Invalid row or table not found
     get:
+      operationId: selectRows
       tags:
         - Rows
       summary: Select rows from a table
@@ -235,6 +243,7 @@ paths:
         '404':
           description: Database or table not found
     put:
+      operationId: updateRows
       tags:
         - Rows
       summary: Update rows in a table
@@ -261,6 +270,7 @@ paths:
         '400':
           description: Invalid condition or table not found
     delete:
+      operationId: deleteRows
       tags:
         - Rows
       summary: Delete rows from a table
@@ -289,6 +299,7 @@ paths:
 
   /databases/{db_name}/tables/union:
     post:
+      operationId: performTableUnion
       tags:
         - Tables
       summary: Perform a union operation between two tables

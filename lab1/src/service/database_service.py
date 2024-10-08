@@ -9,6 +9,10 @@ class AbstractDatabaseService(ABC):
         pass
 
     @abstractmethod
+    def delete_database(self, databases: dict[str, Database], db_name):
+        pass
+
+    @abstractmethod
     def use_database(self, databases: dict[str, Database], db_name):
         pass
 
@@ -82,6 +86,11 @@ class DatabaseService:
         if db_name not in databases:
             raise ValueError(f"Database '{db_name}' does not exist.")
         return db_name
+
+    def delete_database(self, databases: dict[str, Database], db_name):
+        if db_name not in databases:
+            raise ValueError(f"Database '{db_name}' does not exist.")
+        del databases[db_name]
 
     def create_table(
         self, databases: dict[str, Database], current_db: str, table_name, schema_fields

@@ -7,7 +7,7 @@ servers:
 paths:
   /databases:
     post:
-      operationId: databases_post
+      operationId: create_database
       requestBody:
         content:
           application/json:
@@ -25,7 +25,7 @@ paths:
       x-openapi-router-controller: server.controllers.databases_controller
   /databases/{db_name}:
     delete:
-      operationId: databases_db_name_delete
+      operationId: delete_database
       parameters:
       - explode: false
         in: path
@@ -44,7 +44,7 @@ paths:
       - Databases
       x-openapi-router-controller: server.controllers.databases_controller
     get:
-      operationId: databases_db_name_get
+      operationId: get_database_details
       parameters:
       - explode: false
         in: path
@@ -64,7 +64,7 @@ paths:
       x-openapi-router-controller: server.controllers.databases_controller
   /databases/{db_name}/tables:
     get:
-      operationId: databases_db_name_tables_get
+      operationId: list_tables
       parameters:
       - explode: false
         in: path
@@ -89,7 +89,7 @@ paths:
       - Tables
       x-openapi-router-controller: server.controllers.tables_controller
     post:
-      operationId: databases_db_name_tables_post
+      operationId: create_table
       parameters:
       - explode: false
         in: path
@@ -115,7 +115,7 @@ paths:
       x-openapi-router-controller: server.controllers.tables_controller
   /databases/{db_name}/tables/union:
     post:
-      operationId: databases_db_name_tables_union_post
+      operationId: perform_table_union
       parameters:
       - explode: false
         in: path
@@ -149,7 +149,7 @@ paths:
       x-openapi-router-controller: server.controllers.tables_controller
   /databases/{db_name}/tables/{table_name}/rows:
     delete:
-      operationId: databases_db_name_tables_table_name_rows_delete
+      operationId: delete_rows
       parameters:
       - explode: false
         in: path
@@ -183,7 +183,7 @@ paths:
       - Rows
       x-openapi-router-controller: server.controllers.rows_controller
     get:
-      operationId: databases_db_name_tables_table_name_rows_get
+      operationId: select_rows
       parameters:
       - explode: false
         in: path
@@ -225,7 +225,7 @@ paths:
       - Rows
       x-openapi-router-controller: server.controllers.rows_controller
     post:
-      operationId: databases_db_name_tables_table_name_rows_post
+      operationId: insert_row
       parameters:
       - explode: false
         in: path
@@ -257,7 +257,7 @@ paths:
       - Rows
       x-openapi-router-controller: server.controllers.rows_controller
     put:
-      operationId: databases_db_name_tables_table_name_rows_put
+      operationId: update_rows
       parameters:
       - explode: false
         in: path
@@ -290,7 +290,7 @@ paths:
       x-openapi-router-controller: server.controllers.rows_controller
   /databases/{db_name}/tables/{table_name}/schema:
     get:
-      operationId: databases_db_name_tables_table_name_schema_get
+      operationId: get_table_schema
       parameters:
       - explode: false
         in: path
