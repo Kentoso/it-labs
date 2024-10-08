@@ -3,7 +3,7 @@ from typing import Dict
 from typing import Tuple
 from typing import Union
 
-from server.models.databases_post_request import DatabasesPostRequest  # noqa: E501
+from server.models.database_create import DatabaseCreate  # noqa: E501
 from server import util
 
 
@@ -33,16 +33,16 @@ def databases_db_name_get(db_name):  # noqa: E501
     return 'do some magic!'
 
 
-def databases_post(databases_post_request):  # noqa: E501
+def databases_post(database_create):  # noqa: E501
     """Create a new database
 
      # noqa: E501
 
-    :param databases_post_request: 
-    :type databases_post_request: dict | bytes
+    :param database_create: 
+    :type database_create: dict | bytes
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
     if connexion.request.is_json:
-        databases_post_request = DatabasesPostRequest.from_dict(connexion.request.get_json())  # noqa: E501
+        database_create = DatabaseCreate.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'

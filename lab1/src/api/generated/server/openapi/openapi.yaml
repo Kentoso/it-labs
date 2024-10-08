@@ -12,7 +12,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_databases_post_request'
+              $ref: '#/components/schemas/DatabaseCreate'
         required: true
       responses:
         "200":
@@ -102,7 +102,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_databases__db_name__tables_post_request'
+              $ref: '#/components/schemas/TableCreate'
         required: true
       responses:
         "200":
@@ -128,7 +128,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_databases__db_name__tables_union_post_request'
+              $ref: '#/components/schemas/TableUnion'
         required: true
       responses:
         "200":
@@ -245,9 +245,7 @@ paths:
         content:
           application/json:
             schema:
-              additionalProperties:
-                type: string
-              type: object
+              $ref: '#/components/schemas/RowInsert'
         required: true
       responses:
         "200":
@@ -279,7 +277,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/_databases__db_name__tables__table_name__rows_put_request'
+              $ref: '#/components/schemas/RowUpdate'
         required: true
       responses:
         "200":
@@ -325,27 +323,63 @@ paths:
       x-openapi-router-controller: server.controllers.tables_controller
 components:
   schemas:
-    _databases__db_name__tables__table_name__rows_put_request:
-      properties:
-        condition:
-          description: Condition to match rows to update
-          title: condition
-          type: object
-        new_values:
-          description: New values to update in the matched rows
-          title: new_values
-          type: object
-      title: _databases__db_name__tables__table_name__rows_put_request
-      type: object
-    _databases_post_request:
+    DatabaseCreate:
+      example:
+        name: name
       properties:
         name:
           description: Name of the database to create
           title: name
           type: string
-      title: _databases_post_request
+      title: DatabaseCreate
       type: object
-    _databases__db_name__tables_union_post_request:
+    TableCreate:
+      example:
+        schema:
+          key: schema
+        table_name: table_name
+      properties:
+        table_name:
+          description: Name of the table to create
+          title: table_name
+          type: string
+        schema:
+          additionalProperties:
+            type: string
+          description: "Schema of the table as a dictionary (field_name: field_type)"
+          title: schema
+          type: object
+      title: TableCreate
+      type: object
+    RowInsert:
+      additionalProperties:
+        type: string
+      type: object
+    RowUpdate:
+      example:
+        condition:
+          key: condition
+        new_values:
+          key: new_values
+      properties:
+        condition:
+          additionalProperties:
+            type: string
+          description: Condition to match rows to update as a dictionary
+          title: condition
+          type: object
+        new_values:
+          additionalProperties:
+            type: string
+          description: New values to update in the matched rows as a dictionary
+          title: new_values
+          type: object
+      title: RowUpdate
+      type: object
+    TableUnion:
+      example:
+        table2: table2
+        table1: table1
       properties:
         table1:
           description: Name of the first table
@@ -355,19 +389,5 @@ components:
           description: Name of the second table
           title: table2
           type: string
-      title: _databases__db_name__tables_union_post_request
-      type: object
-    _databases__db_name__tables_post_request:
-      properties:
-        table_name:
-          description: Name of the table to create
-          title: table_name
-          type: string
-        schema:
-          additionalProperties:
-            description: "Schema of the table (field_name: field_type)"
-            type: string
-          title: schema
-          type: object
-      title: _databases__db_name__tables_post_request
+      title: TableUnion
       type: object

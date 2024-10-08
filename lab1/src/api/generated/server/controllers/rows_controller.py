@@ -3,7 +3,7 @@ from typing import Dict
 from typing import Tuple
 from typing import Union
 
-from server.models.databases_db_name_tables_table_name_rows_put_request import DatabasesDbNameTablesTableNameRowsPutRequest  # noqa: E501
+from server.models.row_update import RowUpdate  # noqa: E501
 from server import util
 
 
@@ -58,7 +58,7 @@ def databases_db_name_tables_table_name_rows_post(db_name, table_name, request_b
     return 'do some magic!'
 
 
-def databases_db_name_tables_table_name_rows_put(db_name, table_name, databases_db_name_tables_table_name_rows_put_request):  # noqa: E501
+def databases_db_name_tables_table_name_rows_put(db_name, table_name, row_update):  # noqa: E501
     """Update rows in a table
 
      # noqa: E501
@@ -67,11 +67,11 @@ def databases_db_name_tables_table_name_rows_put(db_name, table_name, databases_
     :type db_name: str
     :param table_name: 
     :type table_name: str
-    :param databases_db_name_tables_table_name_rows_put_request: 
-    :type databases_db_name_tables_table_name_rows_put_request: dict | bytes
+    :param row_update: 
+    :type row_update: dict | bytes
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
     if connexion.request.is_json:
-        databases_db_name_tables_table_name_rows_put_request = DatabasesDbNameTablesTableNameRowsPutRequest.from_dict(connexion.request.get_json())  # noqa: E501
+        row_update = RowUpdate.from_dict(connexion.request.get_json())  # noqa: E501
     return 'do some magic!'

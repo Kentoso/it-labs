@@ -4,6 +4,53 @@ info:
   version: 1.0.0
 servers:
   - url: http://localhost:5000
+
+components:
+  schemas:
+    DatabaseCreate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the database to create
+    TableCreate:
+      type: object
+      properties:
+        table_name:
+          type: string
+          description: Name of the table to create
+        schema:
+          type: object
+          additionalProperties:
+            type: string
+          description: "Schema of the table as a dictionary (field_name: field_type)"
+    RowInsert:
+      type: object
+      additionalProperties:
+        type: string
+    RowUpdate:
+      type: object
+      properties:
+        condition:
+          type: object
+          additionalProperties:
+            type: string
+          description: Condition to match rows to update as a dictionary
+        new_values:
+          type: object
+          additionalProperties:
+            type: string
+          description: New values to update in the matched rows as a dictionary
+    TableUnion:
+      type: object
+      properties:
+        table1:
+          type: string
+          description: Name of the first table
+        table2:
+          type: string
+          description: Name of the second table
+
 paths:
   /databases:
     post:
@@ -15,16 +62,13 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: Name of the database to create
+              $ref: '#/components/schemas/DatabaseCreate'
       responses:
         '200':
           description: Database created successfully
         '400':
           description: Database already exists
+
   /databases/{db_name}:
     get:
       tags:
@@ -56,6 +100,7 @@ paths:
           description: Database deleted successfully
         '404':
           description: Database not found
+
   /databases/{db_name}/tables:
     post:
       tags:
@@ -72,16 +117,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                table_name:
-                  type: string
-                  description: Name of the table to create
-                schema:
-                  type: object
-                  additionalProperties:
-                    type: string
-                    description: "Schema of the table (field_name: field_type)"
+              $ref: '#/components/schemas/TableCreate'
       responses:
         '200':
           description: Table created successfully
@@ -108,6 +144,7 @@ paths:
                   type: string
         '404':
           description: Database not found
+
   /databases/{db_name}/tables/{table_name}/schema:
     get:
       tags:
@@ -135,6 +172,7 @@ paths:
                   type: string
         '404':
           description: Database or table not found
+
   /databases/{db_name}/tables/{table_name}/rows:
     post:
       tags:
@@ -156,9 +194,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              additionalProperties:
-                type: string
+              $ref: '#/components/schemas/RowInsert'
       responses:
         '200':
           description: Row inserted successfully
@@ -218,14 +254,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                condition:
-                  type: object
-                  description: Condition to match rows to update
-                new_values:
-                  type: object
-                  description: New values to update in the matched rows
+              $ref: '#/components/schemas/RowUpdate'
       responses:
         '200':
           description: Rows updated successfully
@@ -257,6 +286,7 @@ paths:
           description: Rows deleted successfully
         '400':
           description: Invalid condition or table not found
+
   /databases/{db_name}/tables/union:
     post:
       tags:
@@ -273,14 +303,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                table1:
-                  type: string
-                  description: Name of the first table
-                table2:
-                  type: string
-                  description: Name of the second table
+              $ref: '#/components/schemas/TableUnion'
       responses:
         '200':
           description: Union performed successfully
