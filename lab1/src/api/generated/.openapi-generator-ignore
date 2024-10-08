@@ -23,5 +23,7 @@
 #!docs/README.md
 
 tox.ini
+git_push.sh
 test-requrements.txt
 openapi_server/test/*
+README.md

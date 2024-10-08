@@ -64,3 +64,11 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+git_push.sh
+
+setup.py
+
+test-requirements.txt
+
+.travis.yml
