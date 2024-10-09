@@ -19,3 +19,6 @@ api:
 
 watch-api:
 	docker compose -f api-docker-compose.yaml watch
+
+distributed:
+	docker compose -f distributed-docker-compose.yaml up --build -d
