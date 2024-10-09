@@ -44,6 +44,30 @@ def create_table(db_name, table_create):  # noqa: E501
     return {"error": "Invalid input"}, 400
 
 
+def delete_table(db_name, table_name):  # noqa: E501
+    """Delete a table
+
+     # noqa: E501
+
+    :param db_name:
+    :type db_name: str
+    :param table_name:
+    :type table_name: str
+
+    :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
+    """
+    database_service: AbstractDatabaseService = g.database_service
+
+    try:
+        databases = {}
+        database_service.load_database_json(databases, f"{db_name}.json")
+        database_service.drop_table(databases, db_name, table_name)
+        database_service.save_database_json(databases, db_name, f"{db_name}.json")
+        return None, 204
+    except ValueError as e:
+        return {"error": str(e)}, 400
+
+
 def get_table_schema(db_name, table_name):  # noqa: E501
     """Get the schema of a table
 

@@ -131,6 +131,33 @@ paths:
       tags:
       - Tables
       x-openapi-router-controller: server.controllers.tables_controller
+  /databases/{db_name}/tables/{table_name}:
+    delete:
+      operationId: delete_table
+      parameters:
+      - explode: false
+        in: path
+        name: db_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: table_name
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Table deleted successfully
+        "400":
+          description: Table not found
+      summary: Delete a table
+      tags:
+      - Tables
+      x-openapi-router-controller: server.controllers.tables_controller
   /databases/{db_name}/tables/{table_name}/rows:
     delete:
       operationId: delete_rows
@@ -189,6 +216,13 @@ paths:
         required: false
         schema:
           description: Comma-separated list of columns to select
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: filter
+        required: false
+        schema:
           type: string
         style: form
       responses:

@@ -26,6 +26,10 @@ class AbstractDatabaseService(ABC):
         pass
 
     @abstractmethod
+    def drop_table(self, databases: dict[str, Database], current_db: str, table_name):
+        pass
+
+    @abstractmethod
     def list_tables(self, databases: dict[str, Database], current_db):
         pass
 
@@ -121,6 +125,12 @@ class DatabaseService:
         schema = Schema(schema_fields)
         databases[current_db].create_table(table_name, schema)
         logger.info(f"Table {table_name} created in database {current_db}")
+
+    def drop_table(self, databases: dict[str, Database], current_db: str, table_name):
+        if current_db is None:
+            raise ValueError("No database selected.")
+        databases[current_db].drop_table(table_name)
+        logger.info(f"Table {table_name} dropped from database {current_db}")
 
     def list_tables(self, databases: dict[str, Database], current_db):
         if current_db is None:

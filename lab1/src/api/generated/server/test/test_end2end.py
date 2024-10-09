@@ -85,13 +85,14 @@ def test_end_to_end():
     )
     assert response.status_code == 200
 
-    # # Delete the table
-    # response = requests.delete(f"{base_url}/databases/{db_name}/tables/products")
-    # assert response.status_code == 204
+    # Delete the table
+    response = requests.delete(f"{base_url}/databases/{db_name}/tables/products")
+    assert response.status_code == 204
 
-    # # Get the deleted table
-    # response = requests.get(f"{base_url}/databases/{db_name}/tables/products")
-    # assert response.status_code == 404
+    # List tables
+    response = requests.get(f"{base_url}/databases/{db_name}/tables")
+    assert response.status_code == 200
+    assert response.json() == []
 
     print("End-to-end test passed")
 
@@ -163,5 +164,5 @@ def test_table_union():
     response = requests.get(
         f"{base_url}/databases/{db_name}/tables/products_1_union_products_2/rows"
     )
-    print("abc", response.json())
+    print(response.json())
     assert response.status_code == 200

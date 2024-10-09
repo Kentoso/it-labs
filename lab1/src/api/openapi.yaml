@@ -124,7 +124,28 @@ paths:
                   type: string
         '404':
           description: Database not found
-
+  /databases/{db_name}/tables/{table_name}:
+    delete:
+      operationId: deleteTable
+      tags:
+        - Tables
+      summary: Delete a table
+      parameters:
+        - name: db_name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: table_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Table deleted successfully
+        '400':
+          description: Table not found
   /databases/{db_name}/tables/{table_name}/schema:
     get:
       operationId: getTableSchema
