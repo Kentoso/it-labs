@@ -86,7 +86,7 @@ def get_table_schema(db_name, table_name):  # noqa: E501
         databases = {}
         database_service.load_database_json(databases, f"{db_name}.json")
         schema = database_service.get_table_schema(databases, db_name, table_name)
-        return schema, 200
+        return jsonpickle.encode(schema), 200
     except ValueError as e:
         return {"error": str(e)}, 400
 

@@ -23,7 +23,10 @@ name_to_datatype = {
 
 class Schema:
     def __init__(self, fields: dict):
-        self.fields: dict = fields
+        self.fields: dict[str, datatypes.DataType] = {}
+        for field, field_type in fields.items():
+            field_type = name_to_datatype[field_type]
+            self.fields[field] = field_type
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Schema):
@@ -52,8 +55,6 @@ class Schema:
                 return False, f"Unknown field: {field}"
 
             field_type = self.fields[field]
-
-            field_type = name_to_datatype[field_type]
 
             try:
                 field_value = field_type(value)
