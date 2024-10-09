@@ -17,8 +17,14 @@ api-generate:
 api:
 	docker compose -f api-docker-compose.yaml up --build -d
 
+api-down:
+	docker compose -f api-docker-compose.yaml down
+
 watch-api:
 	docker compose -f api-docker-compose.yaml watch
 
 distributed:
 	docker compose -f distributed-docker-compose.yaml up --build -d
+
+distributed-down:
+	docker compose -f distributed-docker-compose.yaml down

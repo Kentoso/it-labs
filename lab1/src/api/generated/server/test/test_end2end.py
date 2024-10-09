@@ -94,11 +94,15 @@ def test_end_to_end():
     assert response.status_code == 200
     assert response.json() == []
 
+    # Delete the database
+    response = requests.delete(f"{base_url}/databases/{db_name}")
+    assert response.status_code == 204
+
     print("End-to-end test passed")
 
 
 def test_table_union():
-    db_name = "test_db"
+    db_name = "test_db_2"
 
     # Create a database
     response = requests.post(f"{base_url}/databases", json={"name": db_name})
@@ -166,3 +170,15 @@ def test_table_union():
     )
     print(response.json())
     assert response.status_code == 200
+
+
+def test_fail_creating_database_two_times():
+    db_name = "test_db_3"
+
+    # Create a database
+    response = requests.post(f"{base_url}/databases", json={"name": db_name})
+    assert response.status_code == 201
+
+    # Create a database with the same name
+    response = requests.post(f"{base_url}/databases", json={"name": db_name})
+    assert response.status_code == 400

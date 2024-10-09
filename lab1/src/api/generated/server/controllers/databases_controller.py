@@ -21,8 +21,15 @@ def create_database(database_create):  # noqa: E501
     print(connexion.request)
     if connexion.request.is_json:
         database_create = DatabaseCreate.from_dict(connexion.request.get_json())
+        databases = {}
         try:
-            databases = {}
+            database_service.load_database_json(
+                databases, f"{database_create.name}.json"
+            )
+            return {"error": f"Database {database_create.name} already exists"}, 400
+        except FileNotFoundError:
+            pass
+        try:
             database_service.create_database(databases, database_create.name)
             database_service.save_database_json(
                 databases, database_create.name, f"{database_create.name}.json"
@@ -43,10 +50,7 @@ def delete_database(db_name):  # noqa: E501
 
     :rtype: Union[None, Tuple[None, int], Tuple[None, int, Dict[str, str]]
     """
-    database_service: AbstractDatabaseService = g.database_service
-
     try:
-        database_service.load_database_json(f"{db_name}.json")
         os.remove(f"{db_name}.json")
         return None, 204
     except FileNotFoundError:
